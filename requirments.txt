@@ -1,0 +1,30 @@
+
+# ==========================================
+# TSP Algorithm Comparator
+# COSC 251 - Data Structures
+# Group 3 | Fall 2026
+# American University of Phnom Penh
+# ==========================================
+
+# Performance Analysis & Visualization
+matplotlib>=3.8,<4
+
+# ==========================================
+# Python Standard Library
+# ==========================================
+# The following modules are built into Python
+# and DO NOT require installation:
+#
+# itertools   - Generate possible TSP routes
+# time        - Measure algorithm execution time
+# json        - Load and save distance matrices
+# csv         - Export benchmark results
+# random      - Generate sample datasets
+# unittest    - Test algorithm correctness
+# pathlib     - Manage file paths
+#
+# ==========================================
+# Installation
+# ==========================================
+# Run:
+# pip install -r requirements.txt
