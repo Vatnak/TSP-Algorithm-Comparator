@@ -67,14 +67,4 @@ def test_different_start_city():
     check_equal_distances(5, 2)
 
 
-if __name__ == "__main__":
-    test_four_cities()
-    print("4-city test passed.")
-    test_five_cities()
-    print("5-city test passed.")
-    test_eight_cities()
-    print("8-city test passed.")
-    test_ten_cities()
-    print("10-city test passed.")
-    test_different_start_city()
-    print("Different starting city test passed.")
+
