@@ -1,4 +1,5 @@
 
+"""validate the matrix to make sure it's 2D and make sure it's a distance matrix"""
 def validate_matrix(cities, matrix):
     # must have at least 2 cities
     if len(cities) <= 1:
@@ -34,5 +35,32 @@ def validate_matrix(cities, matrix):
                 raise ValueError(f"Invalid! Distance from city {i} to {j} ({matrix[i][j]}) differs from {j} to {i} ({matrix[j][i]}).")
                 
     return True
+
+"""check the route to make sure it's all perfect and cool then calculate the total distance"""
+def route_distance(matrix, route):
+    # check for duplicate routes
+    if len(set(route)) != len(route):
+        raise ValueError("Invalid! Duplicate cities in the route.")
+    # check the route to make sure it has the same amount of cities to route to (missing cities)
+    n = len(matrix)
+    if len(route) != n:
+        raise ValueError(f"Invalid! Route has {len(route)} cities, expected {n}")
+    # index out of range
+    if set(route) != set(range(len(route))):
+        raise ValueError(f"Invalid! Route must contain each city index from 0 to n - 1.")
     
-print(validate_matrix(["A", "B", "C"], [[0, 5, 2], [5, 0, 3], [9, 3, 0]]))
+    distance = 0
+    for k in range(len(route)):
+        distance += matrix[route[k]][route[(k + 1) % len(route)]]
+
+    return distance
+
+matrix = [[0, 10, 15, 20],
+          [10, 0, 35, 25],
+          [15, 35, 0, 30],
+          [20, 25, 30, 0]]
+
+print(route_distance(matrix, [0, 1, 2, -1]))  
+print(route_distance(matrix, [0, 1, 3, 2]))   
+print(validate_matrix(["A", "B", "C"], [[0, 5, 2], [5, 0, 3], [2, 3, 0]]))
+print(route_distance([[0, 10, 15], [10, 0, 35], [15, 35, 0]], [0, 2, 1]))
