@@ -46,9 +46,10 @@ def route_distance(matrix, route):
     if len(route) != n:
         raise ValueError(f"Invalid! Route has {len(route)} cities, expected {n}")
     # index out of range
-    if set(route) != set(range(len(route))):
+    if set(route) != set(range(n)):
         raise ValueError(f"Invalid! Route must contain each city index from 0 to n - 1.")
-    
+
+    # the distance calculation using the route given (return back to the starting position as well (e.g route = [0, 2, 1]) route from 0->2->1 then 1->0)
     distance = 0
     for k in range(len(route)):
         distance += matrix[route[k]][route[(k + 1) % len(route)]]
