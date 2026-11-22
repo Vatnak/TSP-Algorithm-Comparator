@@ -72,3 +72,6 @@ results/*.log
 scratch/
 temp/
 tmp/
+
+#Agent
+AGENTS.md
