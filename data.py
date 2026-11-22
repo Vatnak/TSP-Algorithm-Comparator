@@ -1,6 +1,12 @@
+import json
 
-"""validate the matrix to make sure it's 2D and make sure it's a distance matrix"""
+"""validate the matrix to make sure it's 2D and make sure it's a distance matrix (input must be list)"""
 def validate_matrix(cities, matrix):
+    # input should be a list
+    if not isinstance(cities, list):
+        raise ValueError("Invalid Data Type! Must be 'list'.")
+    if not isinstance(matrix, list):
+        raise ValueError("Invalid Data Type! Must be 'list'.")
     # must have at least 2 cities
     if len(cities) <= 1:
         raise ValueError(f"Only {len(cities)} city! There is no route to find.")
@@ -13,6 +19,8 @@ def validate_matrix(cities, matrix):
 
     # check each rows of the matrix to make sure they have the same length as the cities
     for i, row in enumerate(matrix):
+        if not isinstance(row, list):
+            raise ValueError("Invalid Data Type! Must be 'list'.")
         if len(row) != len(cities):
             raise ValueError(f"Invalid! Row {i} has {len(row)} values. expected {len(cities)}.")
             
@@ -36,7 +44,7 @@ def validate_matrix(cities, matrix):
                 
     return True
 
-"""check the route to make sure it's all perfect and cool then calculate the total distance"""
+"""check the route to make sure it's a valid and perfect route then calculate the total distance"""
 def route_distance(matrix, route):
     # check for duplicate routes
     if len(set(route)) != len(route):
@@ -56,12 +64,32 @@ def route_distance(matrix, route):
 
     return distance
 
-matrix = [[0, 10, 15, 20],
-          [10, 0, 35, 25],
-          [15, 35, 0, 30],
-          [20, 25, 30, 0]]
+"""load the dataset from JSON to python and validate it before returning the data"""
+def load_dataset(path):
+    # try opening the path and store the JSON object as python dict in data
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        raise ValueError(f"Error! Path: {path} not found.")
+    except OSError as e:
+        raise ValueError(f"Error! {e}")
+    except json.JSONDecodeError:
+        raise ValueError("Error! The File is not a valid JSON file.")
 
-print(route_distance(matrix, [0, 1, 2, -1]))  
-print(route_distance(matrix, [0, 1, 3, 2]))   
-print(validate_matrix(["A", "B", "C"], [[0, 5, 2], [5, 0, 3], [2, 3, 0]]))
-print(route_distance([[0, 10, 15], [10, 0, 35], [15, 35, 0]], [0, 2, 1]))
+    # must be a dictionary and must have key of "cities" and "matrix"
+    if not isinstance(data, dict):
+        raise ValueError("Error! The file must contain a JSON object.")
+    for key in ("cities", "matrix"):
+        if key not in data:
+            raise ValueError(f"Error! Key: {key!r} not found.")
+
+    # unpack the data
+    cities = data["cities"]
+    matrix = data["matrix"]
+    # validate the matrix and return it
+    validate_matrix(cities, matrix)
+    return cities, matrix
+
+print(load_dataset("datasets/small_5.json"))
+
