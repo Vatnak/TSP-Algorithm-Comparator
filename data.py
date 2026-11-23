@@ -1,12 +1,14 @@
 import json
+import random
+import math
 
 """validate the matrix to make sure it's 2D and make sure it's a distance matrix (input must be list)"""
 def validate_matrix(cities, matrix):
     # input should be a list
     if not isinstance(cities, list):
-        raise ValueError("Invalid Data Type! Must be 'list'.")
+        raise ValueError("Invalid! cities must be 'list'.")
     if not isinstance(matrix, list):
-        raise ValueError("Invalid Data Type! Must be 'list'.")
+        raise ValueError("Invalid! matrix must be 'list'.")
     # must have at least 2 cities
     if len(cities) <= 1:
         raise ValueError(f"Only {len(cities)} city! There is no route to find.")
@@ -20,7 +22,7 @@ def validate_matrix(cities, matrix):
     # check each rows of the matrix to make sure they have the same length as the cities
     for i, row in enumerate(matrix):
         if not isinstance(row, list):
-            raise ValueError("Invalid Data Type! Must be 'list'.")
+            raise ValueError("Invalid! row must be 'list'.")
         if len(row) != len(cities):
             raise ValueError(f"Invalid! Row {i} has {len(row)} values. expected {len(cities)}.")
             
@@ -55,7 +57,7 @@ def route_distance(matrix, route):
         raise ValueError(f"Invalid! Route has {len(route)} cities, expected {n}")
     # index out of range
     if set(route) != set(range(n)):
-        raise ValueError(f"Invalid! Route must contain each city index from 0 to n - 1.")
+        raise ValueError("Invalid! Route must contain each city index from 0 to n - 1.")
 
     # the distance calculation using the route given (return back to the starting position as well (e.g route = [0, 2, 1]) route from 0->2->1 then 1->0)
     distance = 0
@@ -91,5 +93,27 @@ def load_dataset(path):
     validate_matrix(cities, matrix)
     return cities, matrix
 
-print(load_dataset("datasets/small_5.json"))
+"""save the cities and matrix into the dataset JSON file"""
+def save_dataset(path, cities, matrix):
+    validate_matrix(cities, matrix)
+    # we write the json file like this
+    data = (
+        "{\n"
+        f' "cities": {json.dumps(cities)},\n'
+        f' "matrix": {json.dumps(matrix)}, \n'
+        "}\n"
+    )
+    # open the destination and write it
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(data)
+    except OSError as e:
+        raise ValueError(f"Error! could not write to {path}: {e}")
+
+def generate_dataset(n, seed=0):
+    rng = random.Random(seed)
+
+    
+
+save_dataset("datasets/test.json", ["A", "B", "C", "D"], [[0, 10, 15, 20], [10, 0, 35, 25], [15, 35, 0, 30], [20, 25, 30, 0]])
 
