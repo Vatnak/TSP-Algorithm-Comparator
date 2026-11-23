@@ -100,7 +100,7 @@ def save_dataset(path, cities, matrix):
     data = (
         "{\n"
         f' "cities": {json.dumps(cities)},\n'
-        f' "matrix": {json.dumps(matrix)}, \n'
+        f' "matrix": {json.dumps(matrix)} \n'
         "}\n"
     )
     # open the destination and write it
@@ -113,7 +113,34 @@ def save_dataset(path, cities, matrix):
 def generate_dataset(n, seed=0):
     rng = random.Random(seed)
 
-    
+    # cities names like [city1, city2, ...]
+    cities = [f"City{i + 1}" for i in range(n)]
+    # one random (x, y) position on the map for each city
+    points = [(rng.uniform(0, 100), rng.uniform(0, 100)) for _ in range(n)]
 
-save_dataset("datasets/test.json", ["A", "B", "C", "D"], [[0, 10, 15, 20], [10, 0, 35, 25], [15, 35, 0, 30], [20, 25, 30, 0]])
+    # n x n grid of zero (for diagonal zero)
+    matrix = [[0] * n for _ in range(n)]
+
+    # visit each pair of cities once (only the cell above the diagonal)
+    for i in range(n):
+        for j in range(i + 1, n):
+        # straight line distance between two cities, rounded to 2 decimals
+            d = round(math.dist(points[i], points[j]), 2)
+            # same distance both ways so the matrix is symmetric
+            matrix[i][j] = d
+            matrix[j][i] = d
+
+    return cities, matrix
+
+# run a demo data generation
+if __name__ == "__main__":
+    # sample size 5, 8, 10 for small
+    for n in (5, 8, 10):
+        cities, matrix = generate_dataset(n, seed=n)
+        save_dataset(f"datasets/small_{n}.json", cities, matrix)
+    # sample size 20, 50, 100 for large
+    for i in (20, 50, 100):
+        cities, matrix = generate_dataset(i, seed=i)
+        save_dataset(f"datasets/large_{i}.json", cities, matrix)
+
 
